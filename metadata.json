@@ -1,0 +1,14 @@
+{
+    "name": "Window Navigator",
+    "description": "Navigate between windows using directional hotkeys",
+    "uuid": "window-navigator@birgersp.no",
+    "url": "https://github.com/birgersp/gnome-window-navigator",
+    "settings-schema": "no.birgersp.window-navigator",
+    "shell-version": [
+        "45",
+        "46",
+        "47",
+        "48",
+        "49"
+    ]
+}

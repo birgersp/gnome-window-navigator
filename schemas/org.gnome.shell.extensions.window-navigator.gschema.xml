@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<schemalist>
+	<schema id="no.birgersp.window-navigator" path="/org/gnome/shell/extensions/window-navigator/">
+		<key name="window-navigator-left" type="as">
+			<default>['&lt;Super&gt;h']</default>
+			<summary>Navigate to window on the left</summary>
+			<description>Move focus to the nearest window on the left</description>
+		</key>
+		<key name="window-navigator-right" type="as">
+			<default>['&lt;Super&gt;k']</default>
+			<summary>Navigate to window on the right</summary>
+			<description>Move focus to the nearest window on the right</description>
+		</key>
+		<key name="window-navigator-up" type="as">
+			<default>['&lt;Super&gt;u']</default>
+			<summary>Navigate to window above</summary>
+			<description>Move focus to the nearest window above</description>
+		</key>
+		<key name="window-navigator-down" type="as">
+			<default>['&lt;Super&gt;j']</default>
+			<summary>Navigate to window below</summary>
+			<description>Move focus to the nearest window below</description>
+		</key>
+	</schema>
+</schemalist>
