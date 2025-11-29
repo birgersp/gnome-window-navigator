@@ -4,7 +4,7 @@ import Meta from "gi://Meta"
 import Shell from "gi://Shell"
 import * as Main from "resource:///org/gnome/shell/ui/main.js"
 import { Extension } from "resource:///org/gnome/shell/extensions/extension.js"
-import { Direction, WindowManager } from "./windowManager.js"
+import { Direction, WindowManager } from "./window.js"
 
 export default class WindowNavigatorExtension extends Extension {
 	enable() {

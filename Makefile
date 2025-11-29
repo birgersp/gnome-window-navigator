@@ -1,20 +1,26 @@
 NAME=window-navigator
 DOMAIN=birgersp.no
 
+TS_SRCS := $(shell find src -name '*.ts')
+
 .PHONY: all pack install clean
 
-all: dist/extension.js
+all: out/.tsc-stamp
 
-node_modules/.package-lock.json: package.json
+node_modules/.install-stamp: package.json
 	yarn install
+	@touch $@
 
-dist/extension.js dist/prefs.js: node_modules/.package-lock.json src/*.ts
+out/.tsc-stamp: node_modules/.install-stamp $(TS_SRCS)
 	yarn run build
+	@touch $@
 
 schemas/gschemas.compiled: schemas/org.gnome.shell.extensions.$(NAME).gschema.xml
 	glib-compile-schemas schemas
 
-$(NAME).zip: dist/extension.js dist/prefs.js schemas/gschemas.compiled
+$(NAME).zip: out/.tsc-stamp schemas/gschemas.compiled
+	@mkdir -p dist
+	@cp -r -t dist out/*
 	@cp -r schemas dist/
 	@cp metadata.json dist/
 	@(cd dist && zip ../$(NAME).zip -9r .)
