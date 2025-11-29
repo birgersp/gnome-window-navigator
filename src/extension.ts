@@ -1,12 +1,18 @@
-import GLib from "gi://GLib"
-import Gio from "gi://Gio"
 import Meta from "gi://Meta"
 import Shell from "gi://Shell"
-import * as Main from "resource:///org/gnome/shell/ui/main.js"
 import { Extension } from "resource:///org/gnome/shell/extensions/extension.js"
+import * as Main from "resource:///org/gnome/shell/ui/main.js"
 import { Direction, WindowManager } from "./window.js"
 
 export default class WindowNavigatorExtension extends Extension {
+	disable() {
+		// Remove keybindings
+		Main.wm.removeKeybinding("window-navigator-left")
+		Main.wm.removeKeybinding("window-navigator-right")
+		Main.wm.removeKeybinding("window-navigator-up")
+		Main.wm.removeKeybinding("window-navigator-down")
+	}
+
 	enable() {
 		// Add keybindings for window navigation
 		Main.wm.addKeybinding(
@@ -40,13 +46,5 @@ export default class WindowNavigatorExtension extends Extension {
 			Shell.ActionMode.NORMAL,
 			() => WindowManager.navigateInDirection(Direction.DOWN)
 		)
-	}
-
-	disable() {
-		// Remove keybindings
-		Main.wm.removeKeybinding("window-navigator-left")
-		Main.wm.removeKeybinding("window-navigator-right")
-		Main.wm.removeKeybinding("window-navigator-up")
-		Main.wm.removeKeybinding("window-navigator-down")
 	}
 }
