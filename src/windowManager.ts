@@ -1,84 +1,22 @@
 import Meta from "gi://Meta"
 
-export enum Direction {
-	LEFT = "left",
-	RIGHT = "right",
-	UP = "up",
-	DOWN = "down",
-}
-
 interface WindowPosition {
+	centerX: number
+	centerY: number
+	height: number
+	width: number
 	window: Meta.Window
 	x: number
 	y: number
-	width: number
-	height: number
-	centerX: number
-	centerY: number
 }
 
 export class WindowManager {
-	/**
-	 * Get all normal windows (excluding dialogs, popups, etc.)
-	 */
-	static getWindows(): Meta.Window[] {
-		const workspace =
-			global.workspace_manager.get_active_workspace()
-		const windows = workspace.list_windows()
-
-		return windows.filter((window: Meta.Window) => {
-			// Only include normal windows
-			return (
-				window.get_window_type() === Meta.WindowType.NORMAL &&
-				!window.is_skip_taskbar()
-			)
-		})
-	}
-
-	/**
-	 * Get the position and dimensions of a window
-	 */
-	static getWindowPosition(window: Meta.Window): WindowPosition {
-		const rect = window.get_frame_rect()
-		return {
-			window,
-			x: rect.x,
-			y: rect.y,
-			width: rect.width,
-			height: rect.height,
-			centerX: rect.x + rect.width / 2,
-			centerY: rect.y + rect.height / 2,
-		}
-	}
-
-	/**
-	 * Get the currently focused window
-	 */
-	static getFocusedWindow(): Meta.Window | null {
-		const display = global.display
-		return display.get_focus_window()
-	}
-
-	/**
-	 * Calculate distance between two points
-	 */
-	private static distance(
-		x1: number,
-		y1: number,
-		x2: number,
-		y2: number,
-	): number {
-		const dx = x2 - x1
-		const dy = y2 - y1
-		return Math.sqrt(dx * dx + dy * dy)
-	}
-
 	/**
 	 * Find the nearest window in the specified direction
 	 */
 	static findWindowInDirection(
 		currentWindow: Meta.Window,
-		direction: Direction,
+		direction: Direction
 	): Meta.Window | null {
 		const windows = WindowManager.getWindows()
 		const currentPos = WindowManager.getWindowPosition(currentWindow)
@@ -139,7 +77,7 @@ export class WindowManager {
 						currentPos.centerX,
 						currentPos.centerY,
 						candidate.centerX,
-						candidate.centerY,
+						candidate.centerY
 					)
 			}
 
@@ -153,6 +91,43 @@ export class WindowManager {
 	}
 
 	/**
+	 * Get the currently focused window
+	 */
+	static getFocusedWindow(): Meta.Window | null {
+		const display = global.display
+		return display.get_focus_window()
+	}
+
+	/**
+	 * Get the position and dimensions of a window
+	 */
+	static getWindowPosition(window: Meta.Window): WindowPosition {
+		const rect = window.get_frame_rect()
+		return {
+			window,
+			x: rect.x,
+			y: rect.y,
+			width: rect.width,
+			height: rect.height,
+			centerX: rect.x + rect.width / 2,
+			centerY: rect.y + rect.height / 2,
+		}
+	}
+
+	/**
+	 * Get all normal windows (excluding dialogs, popups, etc.)
+	 */
+	static getWindows(): Meta.Window[] {
+		const workspace = global.workspace_manager.get_active_workspace()
+		const windows = workspace.list_windows()
+
+		return windows.filter((window: Meta.Window) => {
+			// Only include normal windows
+			return window.get_window_type() === Meta.WindowType.NORMAL && !window.is_skip_taskbar()
+		})
+	}
+
+	/**
 	 * Navigate to the window in the specified direction
 	 */
 	static navigateInDirection(direction: Direction): void {
@@ -161,13 +136,26 @@ export class WindowManager {
 			return
 		}
 
-		const targetWindow = WindowManager.findWindowInDirection(
-			currentWindow,
-			direction,
-		)
+		const targetWindow = WindowManager.findWindowInDirection(currentWindow, direction)
 		if (targetWindow) {
 			const timestamp = global.get_current_time()
 			targetWindow.activate(timestamp)
 		}
 	}
+
+	/**
+	 * Calculate distance between two points
+	 */
+	private static distance(x1: number, y1: number, x2: number, y2: number): number {
+		const dx = x2 - x1
+		const dy = y2 - y1
+		return Math.sqrt(dx * dx + dy * dy)
+	}
+}
+
+export enum Direction {
+	LEFT = "left",
+	RIGHT = "right",
+	UP = "up",
+	DOWN = "down",
 }
