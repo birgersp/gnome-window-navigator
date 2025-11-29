@@ -11,3 +11,9 @@ Navigate between windows using keyboard shortcuts:
 - **Super+J**: Move focus to the window below
 
 The extension finds the nearest window in the specified direction and switches focus to it, making window management more efficient without needing to use the mouse.
+
+## Installation (from source)
+
+```
+make install
+```
