@@ -65,7 +65,12 @@ export default class WindowNavigatorExtension extends Extension {
 		const windows = workspace
 			.list_windows()
 			// remove unwanted candidates
-			.filter((it) => it.get_window_type() == Meta.WindowType.NORMAL && !it.is_skip_taskbar())
+			.filter(
+				(it) =>
+					it.get_window_type() == Meta.WindowType.NORMAL && //
+					!it.is_skip_taskbar() &&
+					!it.minimized
+			)
 			// read geometry
 			.map((it) => {
 				const rect = it.get_frame_rect()
