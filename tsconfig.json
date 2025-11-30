@@ -3,9 +3,16 @@
 		"lib": [
 			"ES2023"
 		],
+		"incremental": true,
 		"module": "NodeNext",
 		"moduleResolution": "NodeNext",
 		"outDir": "./out",
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitAny": true,
+		"noImplicitOverride": true,
+		"noImplicitReturns": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"noUncheckedIndexedAccess": true,
 		"skipLibCheck": true,
 		"sourceMap": false,
 		"strict": true,

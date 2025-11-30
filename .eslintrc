@@ -1,0 +1,62 @@
+{
+	"overrides": [
+		{
+			"files": [
+				"src/**/*",
+				"tests/**/*"
+			],
+			"parser": "@typescript-eslint/parser",
+			"plugins": [
+				"@typescript-eslint",
+				"import"
+			],
+			"rules": { // https://typescript-eslint.io/rules/
+				"@typescript-eslint/strict-boolean-expressions": [
+					"error",
+					{
+						"allowNullableObject": false,
+						"allowString": false,
+						"allowNumber": false
+					}
+				],
+				"@typescript-eslint/no-floating-promises": "error",
+				"prefer-const": "warn",
+				"@typescript-eslint/no-unsafe-member-access": "error",
+				"@typescript-eslint/switch-exhaustiveness-check": "error",
+				"@typescript-eslint/no-unused-vars": [
+					"warn",
+					{
+						"args": "none"
+					}
+				],
+				"@typescript-eslint/restrict-template-expressions": "error",
+				"@typescript-eslint/no-non-null-assertion": "error",
+				"semi": [
+					"warn",
+					"never"
+				],
+				"@typescript-eslint/consistent-type-assertions": [
+					"warn",
+					{
+						"assertionStyle": "never"
+					}
+				],
+				"@typescript-eslint/no-explicit-any": "warn",
+				"@typescript-eslint/explicit-member-accessibility": [
+					"error",
+					{
+						"accessibility": "no-public"
+					}
+				],
+				"no-void": "error",
+				"@typescript-eslint/restrict-plus-operands": "error",
+				"no-implicit-coercion": "error"
+			},
+			"parserOptions": {
+				"project": [
+					"./tsconfig.json"
+				]
+			}
+		}
+	]
+}
