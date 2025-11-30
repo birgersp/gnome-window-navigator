@@ -1,4 +1,3 @@
-import Gtk from "gi://Gtk"
 import Adw from "gi://Adw"
 import Gio from "gi://Gio"
 import {
@@ -9,7 +8,7 @@ import {
 export default class GnomeRectanglePreferences extends ExtensionPreferences {
 	_settings?: Gio.Settings
 
-	fillPreferencesWindow(window: Adw.PreferencesWindow): Promise<void> {
+	override fillPreferencesWindow(window: Adw.PreferencesWindow): Promise<void> {
 		this._settings = this.getSettings()
 		const page = new Adw.PreferencesPage({
 			title: _("General"),
