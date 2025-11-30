@@ -1,27 +1,37 @@
-export class Direction {
-	static readonly DOWN = new Direction((p) => new Vec2(p.y, p.x))
-	static readonly LEFT = new Direction((p) => new Vec2(-p.x, p.y))
-	static readonly RIGHT = new Direction((p) => new Vec2(p.x, p.y))
-	static readonly UP = new Direction((p) => new Vec2(-p.y, p.x))
+export type Direction = "DOWN" | "LEFT" | "RIGHT" | "UP"
 
-	private constructor(readonly transform: (p: Vec2) => Vec2) {}
+export class Window<T = unknown> {
+	constructor(
+		readonly data: T,
+		readonly pos: readonly [number, number],
+		readonly width: number,
+		readonly height: number
+	) {}
 }
 
-class Rectangle {
-	constructor(readonly p1: Vec2, readonly size: Vec2) {}
-}
-
-export class Vec2 {
-	constructor(readonly x: number, readonly y: number) {}
-
-	add(other: Vec2): Vec2 {
-		return new Vec2(this.x + other.x, this.y + other.y)
+function getBaseValue(window: Window, direction: Direction) {
+	switch (direction) {
+		case "RIGHT":
+			return window.pos[0] + window.width
+		case "LEFT":
+			return -window.pos[0]
+		case "DOWN":
+			return window.pos[1] + window.height
+		case "UP":
+			return -window.pos[1]
 	}
 }
 
-export class Window<T> extends Rectangle {
-	constructor(readonly data: T, p1: Vec2, size: Vec2) {
-		super(p1, size)
+function getCandidateValue(window: Window, direction: Direction) {
+	switch (direction) {
+		case "RIGHT":
+			return window.pos[0]
+		case "LEFT":
+			return -(window.pos[0] + window.width)
+		case "DOWN":
+			return window.pos[1]
+		case "UP":
+			return -(window.pos[1] + window.height)
 	}
 }
 
@@ -30,36 +40,14 @@ export function getWindow<T>(
 	windows: Array<Window<T>>,
 	direction: Direction
 ): Window<T> | undefined {
-	const windowWrapped = {
-		window,
-		p1: direction.transform(window.p1),
-		p2: direction.transform(window.p1.add(window.size)),
-	}
-	const othersTransformed = windows
-		.filter((it) => it != window)
-		.map((it) => ({
-			origin: it,
-			p1: direction.transform(it.p1),
-			p2: direction.transform(it.p1.add(it.size)),
-		}))
-	const candidates = othersTransformed
-		// remove candidates that are on the "wrong" side
-		.filter((it) => {
-			if (it.p2.x <= windowWrapped.p2.x) {
-				return false
-			}
-			return true
-		})
+	const baseValue = getBaseValue(window, direction)
+	const candidates = windows
+		.filter((it) => it != window && getBaseValue(it, direction) > baseValue)
 		.map((it) => ({
 			w: it,
-			score: -Math.max(it.p1.x - windowWrapped.p2.x, 0),
+			cost: getCandidateValue(it, direction) - baseValue,
 		}))
-	candidates.sort((a, b) => b.score - a.score)
+	candidates.sort((a, b) => a.cost - b.cost)
 	let winner = candidates[0]
-	for (const candidate of candidates) {
-		if (winner == undefined || winner.score == candidate.score) {
-			winner = candidate
-		}
-	}
-	return winner?.w.origin
+	return winner?.w
 }
