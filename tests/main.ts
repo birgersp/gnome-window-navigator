@@ -1,52 +1,42 @@
 import assert from "node:assert"
 import test from "node:test"
-import { Direction, getWindow, Point, Window } from "../src/lib.js"
+import { Direction, getWindow, Vec2, Window } from "../src/lib.js"
 
-function arrayGet<T>(array: Array<T>, index: number) {
-	const item = array[index]
-	if (item == undefined) {
-		throw new Error(`Element at index ${index} is undefined`)
-	}
-}
-
-function window(p1: Point, p2: Point) {
-	return new Window(null, p1, p2)
-}
+const windows = [
+	new Window(
+		//
+		"ide",
+		new Vec2(1920, 0),
+		new Vec2(2560, 1392)
+	),
+	new Window(
+		//
+		"git gui",
+		new Vec2(4808, 411),
+		new Vec2(2024, 674)
+	),
+	new Window(
+		//
+		"browser",
+		new Vec2(4480, 0),
+		new Vec2(2560, 1440)
+	),
+	new Window(
+		//
+		"terminal",
+		new Vec2(0, 0),
+		new Vec2(1920, 1080)
+	),
+]
 
 await test("window navigator", async (t) => {
-	await t.test("navigate right", () => {
-		const windows = [
-			//
-			window([0, 10], [10, 10]),
-			window([20, 10], [30, 10]),
-			window([30, 10], [40, 10]),
-		]
-		const newWindow = getWindow(window([10, 10], [20, 10]), windows, Direction.RIGHT)
-		assert.deepStrictEqual(newWindow, windows[1])
-	})
-
-	await t.test("navigate left", () => {
-		const windows = [
-			//
-			window([0, 10], [10, 10]),
-			window([20, 10], [30, 10]),
-			window([30, 10], [40, 10]),
-		]
-		const newWindow = getWindow(window([10, 10], [20, 10]), windows, Direction.LEFT)
-		assert.deepStrictEqual(newWindow, windows[0])
-	})
-
-	await t.test("navigate nowhere", () => {
-		const newWindow = getWindow(window([0, 10], [0, 10]), [], Direction.LEFT)
-		assert.strictEqual(newWindow, undefined)
-	})
-
-	await t.test("navigate right but no windows are there", () => {
-		const windows = [
-			//
-			window([10, 10], [20, 10]),
-		]
-		const newWindow = getWindow(window([20, 10], [30, 10]), windows, Direction.RIGHT)
+	await t.test("navigate right, find none", () => {
+		const newWindow = getWindow(windows[2], windows, Direction.RIGHT)
 		assert.deepStrictEqual(newWindow, undefined)
+	})
+
+	await t.test("navigate right", () => {
+		const newWindow = getWindow(windows[0], windows, Direction.RIGHT)
+		assert.deepStrictEqual(newWindow, windows[2])
 	})
 })

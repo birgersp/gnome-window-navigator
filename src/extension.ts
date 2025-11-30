@@ -2,7 +2,7 @@ import Meta from "gi://Meta"
 import Shell from "gi://Shell"
 import { Extension } from "resource:///org/gnome/shell/extensions/extension.js"
 import * as Main from "resource:///org/gnome/shell/ui/main.js"
-import { Direction, getWindow, Window } from "./lib.js"
+import { Vec2, Direction, getWindow, Window } from "./lib.js"
 
 // shadow node "global"
 const global = Shell.Global.get()
@@ -57,23 +57,18 @@ export default class WindowNavigatorExtension extends Extension {
 		const currentRect = focusedWindow.get_frame_rect()
 		const currentWindow = new Window(
 			focusedWindow,
-			[currentRect.x, currentRect.y],
-			[currentRect.x + currentRect.width, currentRect.y + currentRect.height]
+			new Vec2(currentRect.x, currentRect.y),
+			new Vec2(currentRect.width, currentRect.height)
 		)
 		const workspace = global.workspace_manager.get_active_workspace()
 		const windows = workspace
 			.list_windows()
 			// remove unwanted candidates
-			.filter(
-				(it) =>
-					it != focusedWindow &&
-					it.get_window_type() == Meta.WindowType.NORMAL &&
-					!it.is_skip_taskbar()
-			)
+			.filter((it) => it.get_window_type() == Meta.WindowType.NORMAL && !it.is_skip_taskbar())
 			// read geometry
 			.map((it) => {
 				const rect = it.get_frame_rect()
-				return new Window(it, [rect.x, rect.y], [rect.x + rect.width, rect.y + rect.height])
+				return new Window(it, new Vec2(rect.x, rect.y), new Vec2(rect.width, rect.height))
 			})
 		const winner = getWindow(currentWindow, windows, direction)
 		if (winner != undefined) {
