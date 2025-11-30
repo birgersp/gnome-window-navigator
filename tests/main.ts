@@ -20,9 +20,20 @@ await test("window navigator", async (t) => {
 	})
 
 	await t.test("navigate right", () => {
-		const windows = new Array([
+		const windows = [
 			//
-			new Window(null, [0, 0], [10, 0]),
-		])
+			window([10, 0], [20, 0]),
+		]
+		const newWindow = getNextWindow(window([0, 0], [0, 0]), windows, Direction.RIGHT)
+		assert.deepStrictEqual(newWindow, windows[0])
+	})
+
+	await t.test("navigate right but no windows are there", () => {
+		const windows = [
+			//
+			window([10, 0], [20, 0]),
+		]
+		const newWindow = getNextWindow(window([20, 0], [30, 0]), windows, Direction.RIGHT)
+		assert.deepStrictEqual(newWindow, undefined)
 	})
 })
