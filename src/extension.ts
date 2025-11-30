@@ -85,6 +85,7 @@ export default class WindowNavigatorExtension extends Extension {
 		}
 		const currentGeometry = currentWindow.get_frame_rect()
 		const current = {
+			geometry: currentGeometry,
 			x1: direction.getX1(currentGeometry),
 			x2: direction.getX2(currentGeometry),
 		}
@@ -111,8 +112,8 @@ export default class WindowNavigatorExtension extends Extension {
 			})
 
 		debug("windows")
-		debug(windows.map((w) => [w.w.title, w.x1, w.x2]))
-		debug([currentWindow.title, current.x1, current.x2])
+		debug(windows.map(toString))
+		debug(toString({ w: currentWindow, ...current }))
 
 		// remove candidates that are on the "wrong side"
 		const candidates = windows
@@ -141,4 +142,22 @@ export default class WindowNavigatorExtension extends Extension {
 
 function debug(...data: unknown[]) {
 	console.debug(...data)
+}
+
+function toString({
+	w,
+	geometry,
+	x1,
+	x2,
+}: {
+	w: Meta.Window
+	geometry: Mtk.Rectangle
+	x1: number
+	x2: number
+}) {
+	return [
+		w.title,
+		[geometry.x, geometry.y, geometry.x + geometry.width, geometry.y + geometry.height],
+		[x1, x2],
+	]
 }
