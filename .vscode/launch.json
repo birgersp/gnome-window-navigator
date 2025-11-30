@@ -1,0 +1,17 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "test",
+			"type": "node",
+			"request": "launch",
+			"runtimeExecutable": "yarn",
+			"runtimeArgs": [
+				"test",
+			],
+			"console": "integratedTerminal",
+			"sourceMaps": true,
+			"internalConsoleOptions": "neverOpen",
+		}
+	]
+}

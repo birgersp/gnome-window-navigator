@@ -54,7 +54,8 @@
 			},
 			"parserOptions": {
 				"project": [
-					"./tsconfig.json"
+					"./tsconfig.json",
+					"./tests.tsconfig.json"
 				]
 			}
 		}
