@@ -16,9 +16,9 @@ function getBaseValue(window: Window, direction: Direction) {
 		case "LEFT":
 			return -window.pos[0]
 		case "DOWN":
-			return window.pos[1] + window.height
+			return window.pos[1]
 		case "UP":
-			return -window.pos[1]
+			return -(window.pos[1] + window.height)
 	}
 }
 
