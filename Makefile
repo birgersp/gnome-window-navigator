@@ -31,4 +31,4 @@ install: $(NAME).zip
 	gnome-extensions install --force $(NAME).zip
 
 clean:
-	@rm -rf dist node_modules $(NAME).zip
+	@rm -rf out dist node_modules $(NAME).zip
