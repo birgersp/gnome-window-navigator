@@ -17,3 +17,12 @@ The extension finds the nearest window in the specified direction and switches f
 ```
 make install
 ```
+
+## Features
+
+- Navigate between windows using hotkeys (WIP)
+
+## Todo
+
+- Add preferences UI, let the user configure hotkeys
+- Deploy to GNOME extension page
