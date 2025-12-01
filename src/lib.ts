@@ -9,6 +9,12 @@ export class Window<T = unknown> {
 	) {}
 }
 
+function assertDefined<T>(subject: T | undefined | null): asserts subject is T {
+	if (subject === undefined || subject === null) {
+		throw new Error(`Expected variable to be not undefined or null`)
+	}
+}
+
 function getBaseValue(window: Window, direction: Direction) {
 	switch (direction) {
 		case "RIGHT":
@@ -47,7 +53,19 @@ export function getWindow<T>(
 			w: it,
 			cost: getCandidateValue(it, direction) - baseValue,
 		}))
+	if (candidates.length == 0) {
+		return
+	}
 	candidates.sort((a, b) => a.cost - b.cost)
 	let winner = candidates[0]
+	assertDefined(winner)
+	// if there is a tie, pick the last of the candidates with the same cost
+	for (const candidate of candidates) {
+		if (candidate.cost == winner.cost) {
+			winner = candidate
+		} else {
+			break
+		}
+	}
 	return winner?.w
 }
