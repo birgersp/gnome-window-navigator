@@ -8,23 +8,17 @@ await test("window navigator", async (t) => {
 			new Window(
 				//
 				"left",
-				[0, 0],
-				10,
-				40
+				{ x: 0, y: 0, width: 10, height: 40 }
 			),
 			new Window(
 				//
 				"top right",
-				[15, 5],
-				10,
-				10
+				{ x: 15, y: 5, width: 10, height: 10 }
 			),
 			new Window(
 				//
 				"bottom right",
-				[15, 20],
-				10,
-				10
+				{ x: 15, y: 20, width: 10, height: 10 }
 			),
 		]
 		assert.deepStrictEqual(getWindow(windows[0], windows, "UP"), undefined)
@@ -37,23 +31,17 @@ await test("window navigator", async (t) => {
 			new Window(
 				//
 				"top",
-				[0, 0],
-				10,
-				10
+				{ x: 0, y: 0, width: 10, height: 10 }
 			),
 			new Window(
 				//
 				"bottom",
-				[5, 15],
-				10,
-				10
+				{ x: 5, y: 15, width: 10, height: 10 }
 			),
 			new Window(
 				//
 				"right",
-				[20, 5],
-				10,
-				10
+				{ x: 20, y: 5, width: 10, height: 10 }
 			),
 		]
 		assert.deepStrictEqual(getWindow(windows[1], windows, "UP"), windows[2])
@@ -66,23 +54,17 @@ await test("window navigator", async (t) => {
 			new Window(
 				//
 				"top",
-				[0, 0],
-				10,
-				10
+				{ x: 0, y: 0, width: 10, height: 10 }
 			),
 			new Window(
 				//
 				"bottom",
-				[5, 15],
-				10,
-				10
+				{ x: 5, y: 15, width: 10, height: 10 }
 			),
 			new Window(
 				//
 				"right",
-				[20, 5],
-				10,
-				10
+				{ x: 20, y: 5, width: 10, height: 10 }
 			),
 		]
 		assert.deepStrictEqual(getWindow(windows[0], windows, "DOWN"), windows[2])
@@ -95,23 +77,17 @@ await test("window navigator", async (t) => {
 			new Window(
 				//
 				"top",
-				[0, 0],
-				10,
-				10
+				{ x: 0, y: 0, width: 10, height: 10 }
 			),
 			new Window(
 				//
 				"bottom",
-				[5, 15],
-				10,
-				10
+				{ x: 5, y: 15, width: 10, height: 10 }
 			),
 			new Window(
 				//
 				"right",
-				[20, 5],
-				10,
-				10
+				{ x: 20, y: 5, width: 10, height: 10 }
 			),
 		]
 		assert.deepStrictEqual(getWindow(windows[2], windows, "LEFT"), windows[1])
@@ -124,23 +100,17 @@ await test("window navigator", async (t) => {
 			new Window(
 				//
 				"top",
-				[0, 0],
-				10,
-				10
+				{ x: 0, y: 0, width: 10, height: 10 }
 			),
 			new Window(
 				//
 				"bottom",
-				[5, 15],
-				10,
-				10
+				{ x: 5, y: 15, width: 10, height: 10 }
 			),
 			new Window(
 				//
 				"right",
-				[20, 5],
-				10,
-				10
+				{ x: 20, y: 5, width: 10, height: 10 }
 			),
 		]
 		assert.deepStrictEqual(getWindow(windows[0], windows, "RIGHT"), windows[1])

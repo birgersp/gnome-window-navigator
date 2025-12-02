@@ -55,12 +55,7 @@ export default class WindowNavigatorExtension extends Extension {
 			return
 		}
 		const currentRect = focusedWindow.get_frame_rect()
-		const currentWindow = new Window(
-			focusedWindow,
-			[currentRect.x, currentRect.y],
-			currentRect.width,
-			currentRect.height
-		)
+		const currentWindow = new Window(focusedWindow, currentRect)
 		const workspace = global.workspace_manager.get_active_workspace()
 		const windows = workspace
 			.list_windows()
@@ -74,11 +69,16 @@ export default class WindowNavigatorExtension extends Extension {
 			// read geometry
 			.map((it) => {
 				const rect = it.get_frame_rect()
-				return new Window(it, [rect.x, rect.y], rect.width, rect.height)
+				return new Window(it, rect)
 			})
 		const winner = getWindow(currentWindow, windows, direction)
 		if (winner != undefined) {
 			winner.data.activate(global.get_current_time())
+		}
+
+		for (const { data } of windows) {
+			const rect = data.get_frame_rect()
+			console.log(data.title, rect.x, rect.y)
 		}
 	}
 }

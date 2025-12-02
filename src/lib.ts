@@ -1,44 +1,58 @@
 export type Direction = "DOWN" | "LEFT" | "RIGHT" | "UP"
 
+type Rectangle = {
+	x: number
+	y: number
+	width: number
+	height: number
+}
+
+type Point = [number, number]
+
 export class Window<T = unknown> {
-	constructor(
-		readonly data: T,
-		readonly pos: readonly [number, number],
-		readonly width: number,
-		readonly height: number
-	) {}
+	constructor(readonly data: T, readonly rectangle: Rectangle) {}
 }
 
 function assertDefined<T>(subject: T | undefined | null): asserts subject is T {
 	if (subject === undefined || subject === null) {
-		throw new Error(`Expected variable to be not undefined or null`)
+		throw new Error(`Expected a non-null or non-undefined value`)
 	}
 }
 
-function getBaseValue(window: Window, direction: Direction) {
+function getTransform(direction: Direction): (p: Point) => Point {
 	switch (direction) {
 		case "RIGHT":
-			return window.pos[0] + window.width
-		case "LEFT":
-			return -window.pos[0]
+			// remain unchanged
+			return ([x, y]) => [x, y]
 		case "DOWN":
-			return window.pos[1]
+			// 90 deg counter-clockwise
+			return ([x, y]) => [y, -x]
+		case "LEFT":
+			// "flip" around the y axis
+			return ([x, y]) => [-x, y]
 		case "UP":
-			return -(window.pos[1] + window.height)
+			// 90 deg clockwise
+			return ([x, y]) => [-y, x]
 	}
 }
 
-function getCandidateValue(window: Window, direction: Direction) {
-	switch (direction) {
-		case "RIGHT":
-			return window.pos[0]
-		case "LEFT":
-			return -(window.pos[0] + window.width)
-		case "DOWN":
-			return window.pos[1]
-		case "UP":
-			return -(window.pos[1] + window.height)
+function transformRectangle(rectangle: Rectangle, direction: Direction): Rectangle {
+	const transform = getTransform(direction)
+	const tl = transform([rectangle.x, rectangle.y])
+	const tr = transform([rectangle.x + rectangle.width, rectangle.y])
+	const bl = transform([rectangle.x, rectangle.y + rectangle.height])
+	return {
+		x: tl[0],
+		y: tl[1],
+		width: tr[0] - tl[0],
+		height: bl[1] - tl[1],
 	}
+}
+
+function getDistance2(p1: Point, p2: Point) {
+	const dx = p2[0] - p1[0]
+	const dy = p2[1] - p1[1]
+	return dx * dx + dy * dy
 }
 
 export function getWindow<T>(
@@ -46,20 +60,41 @@ export function getWindow<T>(
 	windows: Array<Window<T>>,
 	direction: Direction
 ): Window<T> | undefined {
-	const baseValue = getBaseValue(window, direction)
+	// transform rectangles according to direction
+	const base = transformRectangle(window.rectangle, direction)
+	const tr: Point = [base.x + base.width, base.y]
+	const br: Point = [base.x + base.width, base.y + base.height]
+	const midR: Point = [tr[0], tr[1] + (br[1] - tr[1]) / 2]
 	const candidates = windows
-		.filter((it) => it != window && getBaseValue(it, direction) > baseValue)
+		.filter((it) => it != window)
 		.map((it) => ({
-			w: it,
-			cost: getCandidateValue(it, direction) - baseValue,
+			window: it,
+			rectangle: transformRectangle(it.rectangle, direction),
 		}))
+		.filter((it) => {
+			if (it.rectangle.x + it.rectangle.width <= tr[0]) {
+				// rectangle is on the left side
+				return false
+			}
+			return true
+		})
+		.map((it) => {
+			const { x, y, height } = it.rectangle
+			const tl: Point = [x, y]
+			const bl: Point = [x, y + height]
+			const itMidR: Point = [tl[0], tl[1] + (bl[1] - tl[1]) / 2]
+			return {
+				window: it.window,
+				cost: getDistance2(midR, itMidR),
+			}
+		})
+	candidates.sort((a, b) => a.cost - b.cost)
 	if (candidates.length == 0) {
 		return
 	}
-	candidates.sort((a, b) => a.cost - b.cost)
 	let winner = candidates[0]
 	assertDefined(winner)
-	// if there is a tie, pick the last of the candidates with the same cost
+	// keep scanning until the next candidate has a higher cost
 	for (const candidate of candidates) {
 		if (candidate.cost == winner.cost) {
 			winner = candidate
