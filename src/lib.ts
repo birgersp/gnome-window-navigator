@@ -36,7 +36,7 @@ function getTransform(direction: Direction): (p: Point) => Point {
 	}
 }
 
-function transformRectangle(rectangle: Rectangle, direction: Direction): Rectangle {
+export function transformRectangle(rectangle: Rectangle, direction: Direction): Rectangle {
 	const transform = getTransform(direction)
 	const tl = transform([rectangle.x, rectangle.y])
 	const tr = transform([rectangle.x + rectangle.width, rectangle.y])
@@ -80,8 +80,8 @@ export function getWindow<T>(
 		})
 		.map((it) => {
 			const { x, y, height } = it.rectangle
-			const tl: Point = [x, y]
-			const bl: Point = [x, y + height]
+			const tl: Point = [Math.max(x, midR[0]), y]
+			const bl: Point = [Math.max(x, midR[0]), y + height]
 			const itMidR: Point = [tl[0], tl[1] + (bl[1] - tl[1]) / 2]
 			return {
 				window: it.window,
