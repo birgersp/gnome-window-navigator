@@ -19,16 +19,19 @@ schemas/gschemas.compiled: schemas/org.gnome.shell.extensions.$(NAME).gschema.xm
 	glib-compile-schemas schemas
 
 $(NAME).zip: out/.tsc-stamp schemas/gschemas.compiled
-	@mkdir -p dist
-	@cp -r -t dist out/*
-	@cp -r schemas dist/
-	@cp metadata.json dist/
-	@(cd dist && zip ../$(NAME).zip -9r .)
+	mkdir -p dist
+	cp -r -t dist out/*
+	cp -r schemas dist/
+	cp metadata.json dist/
+	(cd dist && zip ../$(NAME).zip -9r .)
 
 pack: $(NAME).zip
 
 install: $(NAME).zip
 	gnome-extensions install --force $(NAME).zip
+
+test: all
+	yarn test
 
 clean:
 	@rm -rf out dist node_modules $(NAME).zip
