@@ -102,5 +102,5 @@ export function getWindow<T>(
 			break
 		}
 	}
-	return winner?.w
+	return winner?.window
 }
