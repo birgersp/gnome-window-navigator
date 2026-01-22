@@ -1,4 +1,3 @@
-import { print } from "./print.js"
 import Meta from "gi://Meta"
 import Shell from "gi://Shell"
 import { Extension } from "resource:///org/gnome/shell/extensions/extension.js"
@@ -60,7 +59,6 @@ export default class WindowNavigatorExtension extends Extension {
 		const currentWindow = new Window(focusedWindow, currentRect)
 		const actors = global.get_window_actors()
 		const allWindows = actors.map((a) => a.get_meta_window())
-		// print(allWindows.map((it) => `${it?.title} ${it?.is_skip_taskbar()} ${it?.get_window_type()}`))
 		const wsWindows = allWindows
 			.filter((it) => it != null)
 			.filter(
