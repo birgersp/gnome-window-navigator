@@ -1,3 +1,4 @@
+import { print } from "./print.js"
 import Meta from "gi://Meta"
 import Shell from "gi://Shell"
 import { Extension } from "resource:///org/gnome/shell/extensions/extension.js"
@@ -57,20 +58,17 @@ export default class WindowNavigatorExtension extends Extension {
 		}
 		const currentRect = focusedWindow.get_frame_rect()
 		const currentWindow = new Window(focusedWindow, currentRect)
-		const actors = global.get_window_actors() // bottom -> top
-		const workspace = global.workspace_manager.get_active_workspace()
-		const wsWindows = actors
-			.map((a) => a.get_meta_window())
+		const actors = global.get_window_actors()
+		const allWindows = actors.map((a) => a.get_meta_window())
+		// print(allWindows.map((it) => `${it?.title} ${it?.is_skip_taskbar()} ${it?.get_window_type()}`))
+		const wsWindows = allWindows
 			.filter((it) => it != null)
-			.filter((w) => w?.get_workspace() == workspace)
-			// remove unwanted candidates
 			.filter(
 				(it) =>
-					it.get_window_type() == Meta.WindowType.NORMAL && //
+					[Meta.WindowType.NORMAL, Meta.WindowType.DIALOG].includes(it.get_window_type()) && //
 					!it.is_skip_taskbar() &&
 					!it.minimized
 			)
-			// read geometry
 			.map((it) => {
 				const rect = it.get_frame_rect()
 				return new Window(it, rect)
