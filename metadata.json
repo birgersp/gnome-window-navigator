@@ -5,10 +5,6 @@
     "url": "https://github.com/birgersp/gnome-window-navigator",
     "settings-schema": "no.birgersp.window-navigator",
     "shell-version": [
-        "45",
-        "46",
-        "47",
-        "48",
-        "49"
+        "46"
     ]
 }
