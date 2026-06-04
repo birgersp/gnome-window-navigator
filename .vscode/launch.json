@@ -5,9 +5,9 @@
 			"name": "test",
 			"type": "node",
 			"request": "launch",
-			"runtimeExecutable": "yarn",
+			"runtimeExecutable": "pnpm",
 			"runtimeArgs": [
-				"test",
+				"test"
 			],
 			"console": "integratedTerminal",
 			"sourceMaps": true,

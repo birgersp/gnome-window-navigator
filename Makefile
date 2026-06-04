@@ -8,11 +8,11 @@ TS_SRCS := $(shell find src -name '*.ts')
 all: out/.tsc-stamp
 
 node_modules/.install-stamp: package.json
-	yarn install
+	pnpm install
 	@touch $@
 
 out/.tsc-stamp: node_modules/.install-stamp $(TS_SRCS)
-	yarn run build
+	pnpm run build
 	@touch $@
 
 schemas/gschemas.compiled: schemas/org.gnome.shell.extensions.$(NAME).gschema.xml
@@ -31,7 +31,7 @@ install: $(NAME).zip
 	gnome-extensions install --force $(NAME).zip
 
 test: all
-	yarn test
+	pnpm test
 
 clean:
 	@rm -rf out dist node_modules $(NAME).zip

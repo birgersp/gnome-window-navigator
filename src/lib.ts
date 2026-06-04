@@ -64,23 +64,53 @@ export function getWindow<T, W extends Window<T>>(
 	direction: Direction
 ): W | undefined {
 	const transform = getDirectionTransform(window.rectangle, direction)
-	const winner = windows
-		.filter((it) => it.data != window.data)
-		.map((it) => {
+	const isHorizontal = direction === "LEFT" || direction === "RIGHT"
+	const C_sizeY = isHorizontal ? window.rectangle.size[1] : window.rectangle.size[0]
+
+	const candidates = windows
+		.map((it, index) => {
 			const center2 = transform(it.rectangle.center)
+			const sizeX = isHorizontal ? it.rectangle.size[0] : it.rectangle.size[1]
+			const sizeY = isHorizontal ? it.rectangle.size[1] : it.rectangle.size[0]
+			const x1 = center2[0] - sizeX / 2
+			const x2 = center2[0] + sizeX / 2
+			const y1 = center2[1] - sizeY / 2
+			const y2 = center2[1] + sizeY / 2
+			const collides = y1 < C_sizeY / 2 && y2 > -C_sizeY / 2
+
 			return {
-				x1: center2[0] - it.rectangle.size[0] / 2,
-				x2: center2[0] + it.rectangle.size[0] / 2,
 				window: it,
+				x1,
+				x2,
+				collides,
+				stackIndex: index,
 			}
 		})
-		.filter((it) => {
-			if (it.x2 <= 0) {
-				return false
+		.filter((it) => it.window.data !== window.data && it.x2 > 0)
+
+	const colliding = candidates.filter((it) => it.collides)
+	if (colliding.length > 0) {
+		// If multiple windows collide, navigate to the window that is topmost.
+		colliding.sort((a, b) => b.stackIndex - a.stackIndex)
+		const first = colliding[0]
+		if (first !== undefined) {
+			return first.window
+		}
+	}
+
+	// If no windows collide, navigate to the window that is closest.
+	if (candidates.length > 0) {
+		candidates.sort((a, b) => {
+			if (Math.abs(a.x1 - b.x1) < 1e-5) {
+				return b.stackIndex - a.stackIndex
 			}
-			return true
+			return a.x1 - b.x1
 		})
-		.reverse()
-		.sort((a, b) => a.x1 - b.x1)[0]
-	return winner?.window
+		const first = candidates[0]
+		if (first !== undefined) {
+			return first.window
+		}
+	}
+
+	return undefined
 }
