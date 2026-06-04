@@ -16,6 +16,7 @@ export default class GnomeRectanglePreferences extends ExtensionPreferences {
 
 	override fillPreferencesWindow(window: Adw.PreferencesWindow): Promise<void> {
 		this._settings = this.getSettings()
+		window.set_resizable(false)
 		const page = new Adw.PreferencesPage({
 			title: _("General"),
 			iconName: "dialog-information-symbolic",
