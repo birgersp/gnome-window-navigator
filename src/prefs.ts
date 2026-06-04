@@ -19,10 +19,12 @@ export default class GnomeRectanglePreferences extends ExtensionPreferences {
 		const page = new Adw.PreferencesPage({
 			title: _("General"),
 			iconName: "dialog-information-symbolic",
+			vexpand: true,
 		})
 
 		const group = new Adw.PreferencesGroup({
 			title: _("Keyboard Shortcuts"),
+			vexpand: true,
 		})
 
 		group.add(this._createShortcutRow("window-navigator-left", _("Move Left")))
